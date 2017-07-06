@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+  "name": "Github Project Schedule",
+  "version": "0.0.1.0",
+  "content_scripts":
+  [
+    {
+      "matches": [
+        "https://github.com/*/*/projects/*",
+        "https://github.com/*/*/issues/*"
+      ],
+      "css": [
+        "flatpickr-material-red.css"
+      ],
+      "js": [
+        "bundle.js"
+      ]
+    }
+  ]
+}

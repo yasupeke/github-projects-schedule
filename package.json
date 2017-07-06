@@ -1,0 +1,37 @@
+{
+  "name": "github-project-schedule",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "release": "npm-run-all -p copy:* compile",
+    "compile": "webpack",
+    "copy:manifest": "cpx ./manifest.json ./bin/github-project-schedule",
+    "copy:style": "cpx ./style/* ./bin/github-project-schedule",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://yasupeke@github.com/yasupeke/github-project-schedule.git"
+  },
+  "author": "yasupeke",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yasupeke/github-project-schedule/issues"
+  },
+  "homepage": "https://github.com/yasupeke/github-project-schedule#readme",
+  "dependencies": {
+    "flatpickr": "^3.0.6"
+  },
+  "devDependencies": {
+    "@types/chrome": "0.0.47",
+    "@types/flatpickr": "^3.0.1",
+    "@types/moment": "^2.13.0",
+    "cpx": "^1.5.0",
+    "moment": "^2.18.1",
+    "npm-run-all": "^4.0.2",
+    "ts-loader": "^2.2.2",
+    "typescript": "^2.4.1",
+    "webpack": "^3.0.0"
+  }
+}
