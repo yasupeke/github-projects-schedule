@@ -2,6 +2,8 @@ import * as Flatpickr from 'flatpickr';
 import { extractDate, replaceDate } from './utils';
 
 module Calendar {
+  let _calendars: Flatpickr[] = [];
+
   export interface IComponent {
     wrapper: HTMLElement;
     input: HTMLInputElement;
@@ -12,6 +14,12 @@ module Calendar {
   export function setup(components: IComponent[]): void {
     components.forEach((component: IComponent) => {
       setupCalendarComponent(component);
+    });
+  }
+
+  export function destory(): void {
+    _calendars.forEach((calendar:Flatpickr) => {
+      calendar.destroy();
     });
   }
 
@@ -47,6 +55,7 @@ module Calendar {
         (btnCalendar.style as any)[property] = component.styles[property];
       }
       setCssRules(component.btnCssRules ||[]);
+      _calendars.push(calendar);
       return btnCalendar;
   }
 
