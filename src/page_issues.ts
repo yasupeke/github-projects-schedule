@@ -6,7 +6,7 @@ module PageIssues {
       {
         wrapper: document.querySelector('#partial-discussion-header') as HTMLDivElement,
         input: document.querySelector('#issue_title') as HTMLInputElement,
-        styles: { 
+        styles: {
           position: 'absolute',
           top: '2px',
           left: '-40px'
@@ -26,7 +26,7 @@ module PageIssues {
       {
         wrapper: document.querySelector('.discussion-topic-header') as HTMLDivElement,
         input,
-        styles: { 
+        styles: {
           position: 'absolute',
           top: '10px',
           left: '16px'

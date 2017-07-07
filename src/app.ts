@@ -6,7 +6,7 @@ import Calendar from './calendar';
 const PAGE_PROJECTS = 'projects';
 const PAGE_ISSUES = 'issues';
 
-const observerConfig = { 
+const observerConfig = {
   childList: true,
   attributes: false,
   characterData: false,
@@ -23,16 +23,16 @@ observer.observe(document.querySelector('#js-repo-pjax-container') as Node, obse
 setup(getCurrentPage());
 
 function setup(page: string): void {
-  switch(page) {
+  switch (page) {
     case PAGE_PROJECTS:
       PageProjects.setup();
-    break;
+      break;
     case PAGE_ISSUES:
       PageIssues.setup();
-    break;
+      break;
     default:
       // nothing
-    break;
+      break;
   }
   currentPage = page;
 }
@@ -43,18 +43,18 @@ function getCurrentPage(): string {
 
 function onMutationListener(mutations: MutationRecord[], observer: MutationObserver): void {
   mutations.forEach((mutation) => {
-    if(mutation.type !== 'childList') return;
-    if(mutation.addedNodes.length === 0) return;
-    switch(currentPage) {
+    if (mutation.type !== 'childList') return;
+    if (mutation.addedNodes.length === 0) return;
+    switch (currentPage) {
       case PAGE_PROJECTS:
         PageProjects.destroy();
-      break;
+        break;
       case PAGE_ISSUES:
         PageIssues.destroy();
-      break;
+        break;
       default:
         // nothing
-      break;
+        break;
     }
     Calendar.destory();
     setup(getCurrentPage());

@@ -8,7 +8,7 @@ export function extractDate(title: string): string | null {
 }
 
 export function replaceDate(title: string, dateStr: string): string {
-  if(!REG_TITLE_DATE.test(title)){
+  if (!REG_TITLE_DATE.test(title)) {
     return `[${dateStr}]${title || ''}`;
   }
   return title.replace(REG_TITLE_DATE, `[${dateStr}]`);

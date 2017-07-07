@@ -11,9 +11,10 @@ module PageProjects {
   const COLOR_RED = '#fbe1e2';
   const COLOR_DANGER = '#fd6565';
   const COLOR_DEFAULT = '#000000';
-  
+  const IGNORE_REG_COLUMN_NAME = /^DONE.*/i;
+
   // オブザーバの設定
-  const columsObserverConfig = { 
+  const columsObserverConfig = {
     childList: true,
     attributes: false,
     characterData: false,
@@ -22,7 +23,7 @@ module PageProjects {
     characterDataOldValue: false
   };
 
-  const popupObserverConfig = { 
+  const popupObserverConfig = {
     childList: true,
     attributes: false,
     characterData: false,
@@ -40,7 +41,10 @@ module PageProjects {
     _columsObserver = new MutationObserver(onColumsMutationListener);
     _popupObserver = new MutationObserver(onPopupMutationListener);
 
-    for(let i = 0, column: HTMLDivElement; column = columns[i]; i++) {
+    for (let i = 0, column: HTMLDivElement; column = columns[i]; i++) {
+      const columnNameElem = column.querySelector('.js-project-column-name') as HTMLSpanElement;
+      const columnName = columnNameElem && columnNameElem.innerText;
+      if (IGNORE_REG_COLUMN_NAME.test(columnName)) continue;
       _columsObserver.observe(column.querySelector('.js-project-column-cards') as Node, columsObserverConfig);
     }
 
@@ -83,7 +87,7 @@ module PageProjects {
     return color;
   }
 
-  function setupAddNoteCalendar(): void  {
+  function setupAddNoteCalendar(): void {
     const noteNewForms = document.querySelectorAll('[class="js-project-note-form"]');
     const calendarComponents: Calendar.IComponent[] = [];
     noteNewForms.forEach((noteForms: HTMLFormElement) => {
@@ -92,7 +96,7 @@ module PageProjects {
       calendarComponents.push({
         wrapper: noteForms,
         input,
-        styles: { 
+        styles: {
           position: 'absolute',
           top: '10px',
           left: '4px'
@@ -105,7 +109,7 @@ module PageProjects {
 
   function onPopupMutationListener(mutations: MutationRecord[], observer: MutationObserver): void {
     mutations.forEach((mutation) => {
-      if(mutation.type !== 'childList') return;
+      if (mutation.type !== 'childList') return;
       for (let i = 0, item: HTMLElement; item = mutation.addedNodes[i] as HTMLElement; ++i) {
         let wrapper: HTMLElement;
         let input: HTMLInputElement;
@@ -119,14 +123,14 @@ module PageProjects {
             left: '40px'
           };
         } else if ((item instanceof HTMLFormElement) && item.classList.contains('js-convert-note-to-issue-form')) {
-          wrapper = item  as HTMLFormElement;
+          wrapper = item as HTMLFormElement;
           input = wrapper.querySelector('input[name="title"]') as HTMLInputElement;
           styles = {
             position: 'absolute',
             top: '-362px',
             left: '40px'
           };
-        } else { 
+        } else {
           continue;
         }
         Calendar.setup([
@@ -143,15 +147,15 @@ module PageProjects {
 
   function onColumsMutationListener(mutations: MutationRecord[], observer: MutationObserver): void {
     mutations.forEach((mutation) => {
-      if(mutation.type !== 'childList') return;
-      for(let i = 0, item: HTMLElement; item = mutation.addedNodes[i] as HTMLElement; ++i) {
-        if(!(item instanceof HTMLDivElement)) continue;
-        if(!item.classList.contains('project-card')) continue;
+      if (mutation.type !== 'childList') return;
+      for (let i = 0, item: HTMLElement; item = mutation.addedNodes[i] as HTMLElement; ++i) {
+        if (!(item instanceof HTMLDivElement)) continue;
+        if (!item.classList.contains('project-card')) continue;
         const title = getCardTitle(item);
         const dateStr = extractDate(title);
-        if(!dateStr) continue;
+        if (!dateStr) continue;
         const color = getColor(dateStr);
-        if(color === COLOR_DEFAULT) continue;
+        if (color === COLOR_DEFAULT) continue;
         paintCard(item, color);
       }
     });

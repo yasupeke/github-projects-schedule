@@ -7,7 +7,7 @@ module Calendar {
   export interface IComponent {
     wrapper: HTMLElement;
     input: HTMLInputElement;
-    styles: { [propety:string]: string | number };
+    styles: { [propety: string]: string | number };
     btnCssRules: string[];
   }
 
@@ -18,7 +18,7 @@ module Calendar {
   }
 
   export function destory(): void {
-    _calendars.forEach((calendar:Flatpickr) => {
+    _calendars.forEach((calendar: Flatpickr) => {
       calendar.destroy();
     });
   }
@@ -34,32 +34,32 @@ module Calendar {
   }
 
   function setupCalendarComponent(component: IComponent): HTMLDivElement {
-      const btnCalendar = createCalendarButton();
-      component.wrapper.style.position = component.wrapper.style.position || 'relative';
-      component.wrapper.appendChild(btnCalendar);
+    const btnCalendar = createCalendarButton();
+    component.wrapper.style.position = component.wrapper.style.position || 'relative';
+    component.wrapper.appendChild(btnCalendar);
 
-      const calendar = new Flatpickr(
-        btnCalendar,
-        {
-          onOpen: () => {
-            const dateStr = extractDate(component.input.value);
-            dateStr && calendar.setDate(dateStr);
-          },
-          onChange: (selectedDates: Date[], dateStr: string, instance: Flatpickr) => {
-            const title = component.input.value;
-            component.input.value = replaceDate(title, dateStr);
-          }
+    const calendar = new Flatpickr(
+      btnCalendar,
+      {
+        onOpen: () => {
+          const dateStr = extractDate(component.input.value);
+          dateStr && calendar.setDate(dateStr);
+        },
+        onChange: (selectedDates: Date[], dateStr: string, instance: Flatpickr) => {
+          const title = component.input.value;
+          component.input.value = replaceDate(title, dateStr);
         }
-      );
-      for(const property in component.styles) {
-        (btnCalendar.style as any)[property] = component.styles[property];
       }
-      setCssRules(component.btnCssRules ||[]);
-      _calendars.push(calendar);
-      return btnCalendar;
+    );
+    for (const property in component.styles) {
+      (btnCalendar.style as any)[property] = component.styles[property];
+    }
+    setCssRules(component.btnCssRules || []);
+    _calendars.push(calendar);
+    return btnCalendar;
   }
 
-  function  setCssRules(btnCssRules: string[]):void {
+  function setCssRules(btnCssRules: string[]): void {
     const style = document.createElement('style') as HTMLStyleElement;
     document.head.appendChild(style);
 
@@ -71,5 +71,4 @@ module Calendar {
     styleSheet.insertRule('.btn-calendar:active { transform: scale(0.8); }', styleSheet.cssRules.length);
   }
 }
-
 export default Calendar;
