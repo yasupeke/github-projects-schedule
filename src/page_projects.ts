@@ -106,20 +106,34 @@ module PageProjects {
   function onPopupMutationListener(mutations: MutationRecord[], observer: MutationObserver): void {
     mutations.forEach((mutation) => {
       if(mutation.type !== 'childList') return;
-      for(let i = 0, item: HTMLElement; item = mutation.addedNodes[i] as HTMLElement; ++i) {
-        if(!(item instanceof HTMLDivElement)) continue;
-        if(!item.classList.contains('js-note-form-container')) continue;
-        const form = item.querySelector('form') as HTMLFormElement;
-        const cardId = form.dataset.cardId;
+      for (let i = 0, item: HTMLElement; item = mutation.addedNodes[i] as HTMLElement; ++i) {
+        let wrapper: HTMLElement;
+        let input: HTMLInputElement;
+        let styles: { [property: string]: string };
+        if ((item instanceof HTMLDivElement) && item.classList.contains('js-note-form-container')) {
+          wrapper = item.querySelector('form') as HTMLFormElement;
+          input = wrapper.querySelector(`#card_note_${wrapper.dataset.cardId}`) as HTMLInputElement;
+          styles = {
+            position: 'absolute',
+            top: '-10px',
+            left: '40px'
+          };
+        } else if ((item instanceof HTMLFormElement) && item.classList.contains('js-convert-note-to-issue-form')) {
+          wrapper = item  as HTMLFormElement;
+          input = wrapper.querySelector('input[name="title"]') as HTMLInputElement;
+          styles = {
+            position: 'absolute',
+            top: '-362px',
+            left: '40px'
+          };
+        } else { 
+          continue;
+        }
         Calendar.setup([
           {
-            wrapper: form,
-            input: form.querySelector(`#card_note_${cardId}`) as HTMLInputElement,
-            styles: { 
-              position: 'absolute',
-              top: '-10px',
-              left: '40px'
-            },
+            wrapper,
+            input,
+            styles,
             btnCssRules: []
           }
         ]);
