@@ -3,7 +3,8 @@ var webpack = require('webpack');
 
 module.exports = {
     entry: {
-        'bundle': './src/app.ts'
+        'app_extention': './src/extention/app.ts',
+        'app_option': './src/option/app.ts'
     },
     output: {
         path: path.join(process.cwd(), 'bin/github-project-schedule'),

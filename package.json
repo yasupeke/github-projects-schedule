@@ -7,7 +7,8 @@
     "release": "npm-run-all -p copy:* compile",
     "compile": "webpack",
     "copy:manifest": "cpx ./manifest.json ./bin/github-project-schedule",
-    "copy:style": "cpx ./style/* ./bin/github-project-schedule",
+    "copy:style": "cpx ./styles/* ./bin/github-project-schedule",
+    "copy:view": "cpx ./views/* ./bin/github-project-schedule",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,12 +22,18 @@
   },
   "homepage": "https://github.com/yasupeke/github-project-schedule#readme",
   "dependencies": {
-    "flatpickr": "^3.0.6"
+    "flatpickr": "^3.0.6",
+    "react": "^15.6.1",
+    "react-color": "^2.13.1",
+    "react-dom": "^15.6.1"
   },
   "devDependencies": {
     "@types/chrome": "0.0.47",
     "@types/flatpickr": "^3.0.1",
     "@types/moment": "^2.13.0",
+    "@types/react": "^15.0.38",
+    "@types/react-color": "^2.11.4",
+    "@types/react-dom": "^15.5.1",
     "cpx": "^1.5.0",
     "moment": "^2.18.1",
     "npm-run-all": "^4.0.2",

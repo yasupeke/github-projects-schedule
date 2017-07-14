@@ -13,8 +13,12 @@
         "flatpickr-material-red.css"
       ],
       "js": [
-        "bundle.js"
+        "app_extention.js"
       ]
     }
-  ]
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "chrome_style": true
+  }
 }
