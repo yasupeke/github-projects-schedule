@@ -4,7 +4,7 @@ var webpack = require('webpack');
 module.exports = {
     entry: {
         'app_extention': './src/extention/app.ts',
-        'app_option': './src/option/app.ts'
+        'app_option': './src/option/app.tsx'
     },
     output: {
         path: path.join(process.cwd(), 'bin/github-project-schedule'),
@@ -23,5 +23,6 @@ module.exports = {
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx']
     },
-    cache: true
+    cache: true,
+    devtool: 'inline-source-map'
 };

@@ -1,3 +1,4 @@
+import Store from '../common/storage';
 import PageProjects from './page_projects';
 import PageIssues from './page_issues';
 import Calendar from './calendar';
@@ -16,16 +17,21 @@ const observerConfig = {
 };
 
 const observer = new MutationObserver(onMutationListener);
-
+let store: Store.IStore;
 let currentPage = '';
 
 observer.observe(document.querySelector('#js-repo-pjax-container') as Node, observerConfig);
-setup(getCurrentPage());
+
+Store.getStore()
+  .then((_store: Store.IStore) => {
+    store = _store;
+    setup(getCurrentPage());
+  });
 
 function setup(page: string): void {
   switch (page) {
     case PAGE_PROJECTS:
-      PageProjects.setup();
+      PageProjects.setup(store);
       break;
     case PAGE_ISSUES:
       PageIssues.setup();

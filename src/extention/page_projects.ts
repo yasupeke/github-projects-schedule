@@ -1,18 +1,9 @@
 import * as Moment from 'moment';
+import Store from '../common/storage';
 import { extractDate } from './utils';
 import Calendar from './calendar';
 
 module PageProjects {
-  const THRESHOLD_GREEN = 7;
-  const THRESHOLD_YELLOW = 3;
-  const THRESHOLD_RED = 0;
-  const COLOR_GREEN = '#e1fbe2';
-  const COLOR_YELLOW = '#fbfbe2';
-  const COLOR_RED = '#fbe1e2';
-  const COLOR_DANGER = '#fd6565';
-  const COLOR_DEFAULT = '#000000';
-  const IGNORE_REG_COLUMN_NAME = /^DONE.*/i;
-
   // オブザーバの設定
   const columsObserverConfig = {
     childList: true,
@@ -32,20 +23,45 @@ module PageProjects {
     characterDataOldValue: false
   };
 
+  let _beforeDaysColors: Store.IBeforeDaysColor[];
   let _columsObserver: MutationObserver;
   let _popupObserver: MutationObserver;
 
-  export function setup(): void {
+  export function setup(store: Store.IStore): void {
+    const copyStore = Object.assign({}, store);
     const columns = getColumuns();
+    const regIgnoreColumns: RegExp[] = [];
 
     _columsObserver = new MutationObserver(onColumsMutationListener);
     _popupObserver = new MutationObserver(onPopupMutationListener);
+    _beforeDaysColors = Object.keys(copyStore.beforeDaysColors)
+      .map((itemKey: string) => {
+        return copyStore.beforeDaysColors[itemKey];
+      })
+      .sort((beforeDaysColor1: Store.IBeforeDaysColor, beforeDaysColor2: Store.IBeforeDaysColor) => {
+        if (beforeDaysColor1.beforeDays < beforeDaysColor2.beforeDays) {
+          return -1;
+        } else if (beforeDaysColor1.beforeDays < beforeDaysColor2.beforeDays) {
+          return 1;
+        } else { 
+          return 0;
+        }
+      });
+
+    for (const itemKey in copyStore.ignoreColumns) {
+      regIgnoreColumns.push(new RegExp(store.ignoreColumns[itemKey]));
+    }
 
     for (let i = 0, column: HTMLDivElement; column = columns[i]; i++) {
       const columnNameElem = column.querySelector('.js-project-column-name') as HTMLSpanElement;
       const columnName = columnNameElem && columnNameElem.innerText;
-      if (IGNORE_REG_COLUMN_NAME.test(columnName)) continue;
-      _columsObserver.observe(column.querySelector('.js-project-column-cards') as Node, columsObserverConfig);
+      const isIgnore = regIgnoreColumns.some((egIgnoreColumn) => {
+        return egIgnoreColumn.test(columnName);
+      });
+      if (isIgnore) continue;
+      const targetColumn = column.querySelector('.js-project-column-cards');
+      _columsObserver.observe(targetColumn as Node, columsObserverConfig);
+      drawColor((targetColumn as HTMLElement).childNodes);
     }
 
     _popupObserver.observe(document.querySelector('#facebox') as Node, popupObserverConfig);
@@ -67,23 +83,19 @@ module PageProjects {
     return title[0];
   }
 
-  function paintCard(card: HTMLDivElement, color: string): void {
-    card.style.setProperty('background', color, 'important');
+  function paintCard(card: HTMLDivElement, color: Store.IColor): void {
+    card.style.setProperty('background', `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a == null ? 1 : color.a})`, 'important');
   }
 
-  function getColor(dateStr: string): string {
+  function getColor(dateStr: string): Store.IColor | null {
     const now = Moment();
-    const diff = now.diff(dateStr, "days");
-    let color = COLOR_DEFAULT;
-    if (diff > 0) {
-      color = COLOR_DANGER;
-    } else if (diff >= -THRESHOLD_RED) {
-      color = COLOR_RED;
-    } else if (diff >= -THRESHOLD_YELLOW) {
-      color = COLOR_YELLOW;
-    } else if (diff >= -THRESHOLD_GREEN) {
-      color = COLOR_GREEN;
-    }
+    const diff = Math.floor(now.diff(dateStr, "days", true));
+    let color: Store.IColor | null = null;
+    _beforeDaysColors.forEach((beforeDaysColor: Store.IBeforeDaysColor) => {
+      if (diff >= -beforeDaysColor.beforeDays) {
+        color = beforeDaysColor.color;
+      }
+    });
     return color;
   }
 
@@ -148,17 +160,21 @@ module PageProjects {
   function onColumsMutationListener(mutations: MutationRecord[], observer: MutationObserver): void {
     mutations.forEach((mutation) => {
       if (mutation.type !== 'childList') return;
-      for (let i = 0, item: HTMLElement; item = mutation.addedNodes[i] as HTMLElement; ++i) {
-        if (!(item instanceof HTMLDivElement)) continue;
-        if (!item.classList.contains('project-card')) continue;
-        const title = getCardTitle(item);
-        const dateStr = extractDate(title);
-        if (!dateStr) continue;
-        const color = getColor(dateStr);
-        if (color === COLOR_DEFAULT) continue;
-        paintCard(item, color);
-      }
+      drawColor(mutation.addedNodes as NodeList);
     });
+  }
+
+  function drawColor(items: NodeList): void { 
+    for (let i = 0, item: HTMLElement; item = items[i] as HTMLElement; ++i) {
+      if (!(item instanceof HTMLDivElement)) continue;
+      if (!item.classList.contains('project-card')) continue;
+      const title = getCardTitle(item);
+      const dateStr = extractDate(title);
+      if (!dateStr) continue;
+      const color = getColor(dateStr);
+      if (!color) continue;
+      paintCard(item, color);
+    }
   }
 }
 export default PageProjects;
