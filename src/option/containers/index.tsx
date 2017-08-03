@@ -98,9 +98,10 @@ export default class Index extends React.Component<IProps, {}> {
   }
 
   public render(): JSX.Element {
+    const now = Date.now();
     const beforeDaysColors = Object.assign({}, this.props.store.beforeDaysColors);
     const ignoreColumns = Object.assign({}, this.props.store.ignoreColumns);
-    beforeDaysColors[Store.uuid()] = {
+    beforeDaysColors[now] = {
       beforeDays: 0,
       color: {
         r: 255,
@@ -109,7 +110,7 @@ export default class Index extends React.Component<IProps, {}> {
         a: 1
       }
     };
-    ignoreColumns[Store.uuid()] = '';
+    ignoreColumns[now + 1] = '';
     return (
       <div>
         <section>
