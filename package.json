@@ -9,6 +9,7 @@
     "copy:manifest": "cpx ./manifest.json ./bin/github-project-schedule",
     "copy:style": "cpx ./styles/* ./bin/github-project-schedule",
     "copy:view": "cpx ./views/* ./bin/github-project-schedule",
+    "copy:res": "cpx \"./res/*\" ./bin/github-project-schedule",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
