@@ -5,6 +5,7 @@
 ![2017-07-09 1 18 52](https://user-images.githubusercontent.com/3618051/27987276-e1bbf4d0-6445-11e7-8cd3-fe91331a82a5.png)
 
 **Default Settings**
+
 | color | before days |
 |:-----------|:------------|
 | green | one week before |
