@@ -7,7 +7,7 @@ module.exports = {
         'app_option': './src/option/app.tsx'
     },
     output: {
-        path: path.join(process.cwd(), 'bin/github-project-schedule'),
+        path: path.join(process.cwd(), 'bin/github-projects-schedule'),
         filename: '[name].js',
         chunkFilename: `app.[hash].js?_rev=${Date.now()}`,
     },

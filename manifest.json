@@ -1,7 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Github Project Schedule",
-  "version": "0.0.1.0",
+  "name": "Github Projects Schedule",
+  "description": "Github Projectsのカードに期日によって色付け",
+  "version": "0.0.2.0",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
