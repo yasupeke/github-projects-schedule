@@ -1,9 +1,17 @@
 {
   "manifest_version": 2,
-  "name": "Github Project Schedule",
+  "name": "Github Projects Schedule",
+  "description": "Github Projectsのカードに期日によって色付け",
   "version": "0.0.2.0",
-  "content_scripts":
-  [
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "content_scripts": [
     {
       "matches": [
         "https://github.com/*/*/projects/*",
@@ -13,8 +21,12 @@
         "flatpickr-material-red.css"
       ],
       "js": [
-        "bundle.js"
+        "app_extention.js"
       ]
     }
-  ]
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "chrome_style": true
+  }
 }
